@@ -1,0 +1,163 @@
+
+students = [
+    {
+        "name": "Sean",
+        "age": 21,
+        "major": "CIS",
+        "gpa": 3.8,
+    },
+    {
+        "name": "Marty",
+        "age": 6,
+        "major": "Cat",
+        "gpa": 4.0,
+    },
+    {
+        "name": "Chance",
+        "age": 36,
+        "major": "goblin",
+        "gpa": 2.0
+    }
+]
+def find_student_by_name(students, name):
+    for student in students:
+        if student["name"].lower() == name.lower():
+            print(f"{student['name']} - {student['age']} - {student['major']} - {student['gpa']}")
+            return
+    print('Student not found')
+def count_students_by_major(students, major):
+    count = 0
+    for student in students:
+        if student["major"].lower() == major.lower():
+            count +=1
+    print(f"There are {count} students in {major}")
+def lowest_gpa(students):
+    lowest_student=students[0]
+    for student in students:
+        if student["gpa"] < lowest_student["gpa"]:
+            lowest_student = student
+    print(f"{lowest_student['name']} - {lowest_student['gpa']}")
+def highest_gpa(students):
+    highest_student=students[0]
+    for student in students:
+        if student["gpa"] > highest_student["gpa"]:
+            highest_student=student
+    print(f"{highest_student['name']} - {highest_student['gpa']}")
+        
+def average_gpa(students):
+    total_gpa = 0
+    for student in students:
+        total_gpa+=(student["gpa"])
+    average=total_gpa/len(students)
+    print(f"The average gpa is{average}")
+    return
+
+def update_student(students, name):
+    for student in students:
+        if student["name"].strip().lower() == name.strip().lower():
+            print(f"Editing {student['name']}")
+            new_age = input('Enter new age or press enter to keep current: ')
+            if new_age !="":
+                            student["age"] = int(new_age)
+            new_major = input('Enter new major or press enter to keep current: ')
+            if new_major != "":
+                            student["major"] = new_major
+            new_gpa = input('Enter new GPA or press enter to keep current: ')
+           
+           
+            if new_gpa != "":
+                student["gpa"] = float(new_gpa)
+            print("Student updated.")
+            return
+    print("Student not found.")
+        
+
+def delete_student(students, name):
+    for student in students:
+        if student["name"].lower() == name.lower():
+            students.remove(student)
+            print("Student deleted.")
+            return
+    print("Student not found.")
+
+def show_gpa(students, minimum_gpa):
+    for student in students:
+        if student["gpa"] >= minimum_gpa:
+            print(f"{student['name']} - {student['age']} - {student['major']} - {student['gpa']} ")
+def show_major(students, major):
+    for student in students:
+        if student["major"] == major:
+            print(f"{student['name']} - {student['age']} - {student['major']}")
+def show_students(students):
+    for student in students:
+        print(f"{student['name']} - {student['age']} - {student['major']} - {student['gpa']}")
+
+def add_student(students):
+    name=input("What is your name?")
+    age=int(input("How old are you?"))
+    major=input("What is your major?")
+    gpa=float(input("What is your gpa?"))
+    student = {
+        "name": name,
+        "age": age,
+        "major": major,
+        "gpa": gpa
+    }
+    students.append(student)
+
+def find_students_by_major(students, major):
+    matching_students =[]
+    for student in students:
+        if student["major"] == major:
+            matching_students.append(student)
+    return matching_students
+
+while True:
+    print("1. Show students")
+    print("2. Add student")
+    print("3. Find students by major")
+    print("4. Find students by minimum GPA")
+    print("5. Delete student")
+    print("6. Update student")
+    print("7. Average GPA")
+    print("8. Highest Student GPA")
+    print("9. Lowest Student GPA")
+    print("10. Student Count by Major")
+    print("11. Exit")
+    print("12. Find Student by Name")
+    choice = input("Choose an option:")
+    if choice == "1":
+        show_students(students)
+    elif choice == "2":
+        add_student(students)
+    elif choice == "3":
+        major = input("What major are you looking for?")
+        show_major(students, major)
+    elif choice == "4":
+        minimum_gpa = float(input("What should the students' minimum GPA be? "))
+        show_gpa(students, minimum_gpa)
+    elif choice == "5":
+        name = (input("What name is the name of the student you wish to delete?"))
+        delete_student(students, name)
+    elif choice =="6":
+        name = (input("What is the name of the student you want to update?"))
+        update_student(students, name)
+
+    elif choice == "7":
+        average_gpa(students)
+    elif choice == "8":
+        highest_gpa(students)
+    elif choice == "9":
+        lowest_gpa(students)
+    elif choice == "10":
+        major = (input("What major do you want to check the student count of?"))
+        count_students_by_major(students, major)
+    elif choice == "11":
+        break
+    elif choice =="12":
+        name =(input("What is the name of the student that you wish to find?"))
+        find_student_by_name(students, name)
+
+    
+    else:
+        print("Invalid choice. Please choose 1-12.")
