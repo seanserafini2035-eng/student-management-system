@@ -1,24 +1,18 @@
+import json
 
-students = [
-    {
-        "name": "Sean",
-        "age": 21,
-        "major": "CIS",
-        "gpa": 3.8,
-    },
-    {
-        "name": "Marty",
-        "age": 6,
-        "major": "Cat",
-        "gpa": 4.0,
-    },
-    {
-        "name": "Chance",
-        "age": 36,
-        "major": "goblin",
-        "gpa": 2.0
-    }
-]
+def load_students():
+    file = open("students.json", "r")
+    students = json.load(file)
+    file.close()
+    return students
+
+students=load_students()
+
+def save_students(students):
+    file = open("students.json", "w")
+    json.dump(students, file)
+    file.close()
+
 def find_student_by_name(students, name):
     for student in students:
         if student["name"].lower() == name.lower():
@@ -56,19 +50,45 @@ def update_student(students, name):
     for student in students:
         if student["name"].strip().lower() == name.strip().lower():
             print(f"Editing {student['name']}")
+            
+
             new_age = input('Enter new age or press enter to keep current: ')
+            
             if new_age !="":
-                            student["age"] = int(new_age)
+                    try:
+                        age = int(new_age)
+                    
+                    except ValueError:
+                        print('Age must be a valid number')
+                        return
+                    if  age <= 0:
+                        print('Age cannot be negative or zero ')
+                        return
+                    student['age'] = age
+           
+            
+            
             new_major = input('Enter new major or press enter to keep current: ')
             if new_major != "":
-                            student["major"] = new_major
+                student["major"] = new_major
+            
             new_gpa = input('Enter new GPA or press enter to keep current: ')
            
-           
+            
+            
             if new_gpa != "":
-                student["gpa"] = float(new_gpa)
-            print("Student updated.")
+                try:
+                    gpa = float(new_gpa)
+                except ValueError:
+                    print('Not a valid GPA')
+                    return
+                if gpa < 0 or gpa > 4.0:
+                    print('Not a valid GPA. Enter a value between 0 and 4.0')
+                    return
+                student['gpa'] = gpa
+            print('Student updated')
             return
+
     print("Student not found.")
         
 
@@ -94,9 +114,30 @@ def show_students(students):
 
 def add_student(students):
     name=input("What is your name?")
-    age=int(input("How old are you?"))
+    for student in students:
+        if name.strip().lower() == student['name'].strip().lower():
+            print('Student already exists')
+            return
+    try:
+
+        age=int(input("How old are you?"))
+    except ValueError:
+        print("Invalid age. Please enter a number")
+        return
+    if age < 0:
+        print("Age cannot be a negative number")
+        return
     major=input("What is your major?")
-    gpa=float(input("What is your gpa?"))
+    try:
+
+        gpa=float(input("What is your gpa?"))
+    except ValueError:
+        print("Invalid Value, Please enter a legal GPA")
+        return
+    
+    if gpa < 0.0 or gpa > 4.0:
+        print("GPA must be between 0 and 4")
+        return
     student = {
         "name": name,
         "age": age,
@@ -104,6 +145,7 @@ def add_student(students):
         "gpa": gpa
     }
     students.append(student)
+    print("Student added")
 
 def find_students_by_major(students, major):
     matching_students =[]
@@ -130,6 +172,7 @@ while True:
         show_students(students)
     elif choice == "2":
         add_student(students)
+        save_students(students)
     elif choice == "3":
         major = input("What major are you looking for?")
         show_major(students, major)
@@ -139,9 +182,11 @@ while True:
     elif choice == "5":
         name = (input("What name is the name of the student you wish to delete?"))
         delete_student(students, name)
+        save_students(students)
     elif choice =="6":
         name = (input("What is the name of the student you want to update?"))
         update_student(students, name)
+        save_students(students)
 
     elif choice == "7":
         average_gpa(students)
